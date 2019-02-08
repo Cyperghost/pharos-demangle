@@ -65,9 +65,39 @@ class Converter {
       return (*this) << os.str();
     }
 
-    ConvStream & operator<<(std::string && x) {
-      return (*this) << const_cast<std::string const &>(x);
-    }
+      ConvStream & operator<<(std::string && x) {
+        return (*this) << const_cast<std::string const &>(x);
+      }
+
+      ConvStream & operator<<(const Code & x) {
+        return (*this) << code_string(x);
+      }
+      ConvStream & operator<<(const Scope & x) {
+          switch (x) {
+              case Scope::Unspecified:
+                  break;
+              case Scope::Private:
+                  return (*this) << "private: ";
+              case Scope::Protected:
+                  return (*this) << "protected: ";
+              case Scope::Public:
+                  return (*this) << "public: ";
+          }
+          return (*this);
+      }
+      ConvStream & operator<<(const Distance & x) {
+          switch (x) {
+              case Distance::Unspecified:
+                  break;
+              case Distance::Near:
+                  return (*this) << "near ";
+              case Distance::Far:
+                  return (*this) << "far ";
+              case Distance::Huge:
+                  return (*this) << "huge ";
+          }
+          return (*this);
+      }
 
     static bool is_symbol_char(char c) {
       return c == '_' || std::isalnum(c);
@@ -178,7 +208,7 @@ class Converter {
 };
 
 template <typename Stream>
-Stream operator<<(Stream stream, Scope scope) {
+Stream operator<<(Stream stream,const Scope & scope) {
   switch (scope) {
    case Scope::Unspecified: break;
    case Scope::Private: return stream << "private: ";
@@ -189,7 +219,7 @@ Stream operator<<(Stream stream, Scope scope) {
 }
 
 template <typename Stream>
-Stream operator<<(Stream stream, Distance distance) {
+Stream operator<<(Stream stream,const Distance & distance) {
   switch (distance) {
    case Distance::Unspecified: break;
    case Distance::Near: return stream << "near ";

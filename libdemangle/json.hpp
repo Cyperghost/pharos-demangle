@@ -28,7 +28,6 @@
 #include <ostream>              // std::ostrem
 #include <cstdint>              // std::nullptr_t
 #include <string>               // std::string
-
 namespace json {
 namespace wrapper {
 
@@ -92,9 +91,6 @@ class Simple {
   Simple(std::string && v) : type(STRINGRR), r(std::move(v)) {}
 
   ~Simple() {
-    if (type == STRINGRR) {
-      r.std::string::~string();
-    }
   }
 
   NodeRef apply(Builder const & b);
