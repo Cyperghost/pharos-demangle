@@ -24,8 +24,6 @@
 #define Include_Demangle_H
 
 #include <string>
-#include <stdexcept>
-#include <memory>
 #include <vector>
 
 #include "codes.hpp"
