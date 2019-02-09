@@ -52,10 +52,11 @@ PyObject* pythondemangle(char* mangled)
         auto node = json_output->minimal(*t);
         std::string s = str.convert(*t);
 
-        final_out_stream << s.substr(0, s.length()/2);
+        final_out_stream << s;
 
     }
     catch (const demangle::Error& e) {
+        final_out_stream << mangled;
     }
 
     // necessary to copy the string or we lose it (temp memory)
