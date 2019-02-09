@@ -21,12 +21,13 @@
 // DM17-0949
 
 #include "demangle.cpp"
-
 #include <Python.h>
 
 #include <boost/python/module.hpp>
 #include <boost/python/def.hpp>
 using namespace boost::python;
+
+//class PyObject;
 
 PyObject* pythondemangle(char* mangled)
 {
@@ -39,18 +40,22 @@ PyObject* pythondemangle(char* mangled)
 
         bool debug = false;
         auto t = demangle::visual_studio_demangle(mangled, debug);
+        demangle::TextOutput str;
+        auto attr = TextAttributes();
+        attr.set(TextAttribute::DISABLE_PREFIXES);
+        attr.set(TextAttribute::BROKEN_UNDNAME);
+        attr.set(TextAttribute::OUTPUT_THUNKS);
+        attr.set(TextAttribute::VERBOSE_CONSTANT_STRING);
+        attr.set(TextAttribute::OUTPUT_ANONYMOUS_NUMBERS);
+        str.set_attributes(attr);
 
         auto node = json_output->minimal(*t);
-        node->add("symbol", mangled);
-        //node->add("demangled", str(*t));
+        std::string s = str.convert(*t);
 
-        final_out_stream << *node;
+        final_out_stream << s.substr(0, s.length()/2);
 
     }
     catch (const demangle::Error& e) {
-
-        final_out_stream << "{}";
-
     }
 
     // necessary to copy the string or we lose it (temp memory)

@@ -85,6 +85,7 @@ class TextAttributes {
     auto attr = TextAttributes();
     attr.set(TextAttribute::OUTPUT_EXTERN);
     attr.set(TextAttribute::OUTPUT_THUNKS);
+    attr.set(TextAttribute::BROKEN_UNDNAME);
     attr.set(TextAttribute::CDTOR_CLASS_TEMPLATE_PARAMETERS);
     attr.set(TextAttribute::MS_SIMPLE_TYPES);
     attr.set(TextAttribute::SPACE_BETWEEN_TEMPLATE_BRACKETS);

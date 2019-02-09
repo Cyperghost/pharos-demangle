@@ -37,3 +37,6 @@ add_custom_target(demangle_man ALL DEPENDS "${POD_DEST}")
 install(
   FILES "${POD_DEST}"
   DESTINATION share/man/man1)
+
+add_executable(test pydemanglemodule.cpp)
+target_link_libraries(test libdemangle Boost::filesystem Boost::program_options)
