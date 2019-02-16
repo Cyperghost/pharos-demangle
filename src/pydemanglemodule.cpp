@@ -27,6 +27,15 @@
 #include <boost/python/def.hpp>
 using namespace boost::python;
 
+// delete malloc'd memory
+struct malloc_deleter
+{
+    void operator()(void* p) const { std::free(p); }
+};
+
+// custom smart pointer for c-style strings allocated with std::malloc
+using cstring_uptr = std::unique_ptr<char, malloc_deleter>;
+
 //class PyObject;
 
 PyObject* pythondemangle(char* mangled)
@@ -56,7 +65,13 @@ PyObject* pythondemangle(char* mangled)
 
     }
     catch (const demangle::Error& e) {
-        final_out_stream << mangled;
+        int error;
+        cstring_uptr name(abi::__cxa_demangle(mangled, 0, 0, &error));
+        if(!error) {
+            final_out_stream << name;
+        }else{
+            final_out_stream << mangled;
+        }
     }
 
     // necessary to copy the string or we lose it (temp memory)
